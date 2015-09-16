@@ -2,26 +2,60 @@ package com.projecta.xem;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.projecta.xem.der.Der;
 
 public class MyGame extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
+	private SpriteBatch batch;
+	private Der der;
+	private OrthographicCamera camera;
+	
+	// Debuggin 
+	private BitmapFont font;
 	
 	@Override
-	public void create () {
+	public void create() {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		der = new Der();
+		camera = new OrthographicCamera();
+	    camera.setToOrtho(false, 800, 480);
+	    font = new BitmapFont();
 	}
 
 	@Override
-	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+	public void render() {
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		// DeltaTime
+		float dt = Math.min(Gdx.graphics.getDeltaTime(), 1 / 60f);
+		
+		// tell the camera to update its matrices.
+	    camera.update();
+	    
+	    // tell the SpriteBatch to render in the
+	    // coordinate system specified by the camera.
+	    batch.setProjectionMatrix(camera.combined);
+	    
+	    gameLogic(dt);
+		
 		batch.begin();
-		batch.draw(img, 0, 0);
+		batch.draw(der.body, der.x, der.y);
+		font.draw(batch, ""+der.y, 0, 30);
 		batch.end();
+	}
+
+	private void gameLogic(float dt) {
+		der.updateJump(dt);
+		if(Gdx.input.isKeyPressed(Keys.DPAD_LEFT))
+			der.moveLred(dt);
+		if(Gdx.input.isKeyPressed(Keys.DPAD_RIGHT)) 
+			der.moveRder(dt);
+		if(Gdx.input.isKeyPressed(Keys.SPACE))
+			der.jumpDer(dt);
 	}
 }
