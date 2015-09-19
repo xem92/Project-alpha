@@ -15,7 +15,12 @@ public class MyGame extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	
 	// Debuggin 
-	private BitmapFont font;
+	private BitmapFont fontY;
+	private BitmapFont fontX;
+	private BitmapFont fontCrunch;
+	
+	//Key pressing control
+	private Boolean keyC;
 	
 	@Override
 	public void create() {
@@ -23,7 +28,11 @@ public class MyGame extends ApplicationAdapter {
 		der = new Der();
 		camera = new OrthographicCamera();
 	    camera.setToOrtho(false, 800, 480);
-	    font = new BitmapFont();
+	    fontY = new BitmapFont();
+	    fontX = new BitmapFont();
+	    fontCrunch = new BitmapFont();
+	    
+	    keyC = true;
 	}
 
 	@Override
@@ -45,7 +54,11 @@ public class MyGame extends ApplicationAdapter {
 		
 		batch.begin();
 		batch.draw(der.body, der.x, der.y);
-		font.draw(batch, ""+der.y, 0, 30);
+		
+		//Debugin text
+		fontY.draw(batch, ""+der.y, 0, 30);
+		fontX.draw(batch, ""+der.x, 40, 30);
+		fontCrunch.draw(batch, ""+der.crouch, 0, 60);
 		batch.end();
 	}
 
@@ -57,5 +70,12 @@ public class MyGame extends ApplicationAdapter {
 			der.moveRder(dt);
 		if(Gdx.input.isKeyPressed(Keys.SPACE))
 			der.jumpDer(dt);
+		if(Gdx.input.isKeyPressed(Keys.C)){
+			if (keyC)
+				der.crouchDer();
+			keyC = false;
+		} else {
+			keyC = true;
+		}
 	}
 }

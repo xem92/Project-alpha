@@ -10,18 +10,25 @@ public class Der {
 	private static final float GROUND           = 50;
 	private static final float VELOCITY			= 30; 
 	
+	//Der propierties
 	public Texture body;
 	public float x;
 	public float y;
+	public int height;
+	public int width;
 	private float jumpAcceleration;
 	public Boolean jumpState;
+	public Boolean crouch;
 	
 	// Der constructor
 	public Der() {
 		body = new Texture("der.png");
 		x = 50;
 		y = 50;
+		height = 52;
+		width = 33;
 		jumpState = false;
+		crouch = false;
 	}
 	
 	public void moveRder(float dt) {
@@ -32,8 +39,23 @@ public class Der {
 		x -= VELOCITY*dt;
 	}
 	
+	public void crouchDer(){
+		if (crouch){
+			crouch = false;
+			body = new Texture("der.png");
+			height = 52;
+			width = 33;
+		}else{
+			crouch = true;
+			body = new Texture("crunchDer.png");
+			height = 33;
+			width = 52;
+		}
+	}
+	
 	public void jumpDer(float dt) {
-		if (jumpState == false) {
+		// jump only if it isn't jumping already or is dow
+		if (jumpState == false && crouch == false) {
 			jumpState = true;
 			jumpAcceleration = 0;
 		}
